@@ -1,23 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import ToDoForm from "./components/ToDoForm";
+import ToDoList from "./components/ToDoList";
+import React, {useEffect, useState} from "react";
+import { Button, Link } from "@mui/material";
 
 function App() {
+  
+  const [id, setId] = useState(0)
+  const [todos, setTodos] = useState([])
+  const [color, setColor] = useState("white")
+
+  
+
+  const checkTodo = (id) => {
+    setTodos(todos.map((todo) => {
+      if (todo.id === id)
+      {
+        todo.isCompleted = !todo.isCompleted
+        console.log(id, todo.isCompleted)
+      }
+      return todo
+    }
+    ))
+  }
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id) )
+  }
+
+  const addTodo = (text) => {
+    
+    const newTodo = {
+      id: id,
+      title: text,
+      isCompleted: false
+    }
+    setTodos([...todos, newTodo])
+    setId(id + 1)
+  }
+
+
+
+  const changeColor = () => {
+    setColor(color === "white" ? "lightgrey" : "white")
+  }
+
+  useEffect(() => {
+    document.body.style.backgroundColor = color
+  }, [color])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button onClick={changeColor} variant="outlined">Change Theme</Button>
+        <Link href="https://github.com/ejtrheoz" underline="none">Ejtrheoz Github</Link>
+      </div>
+      
+      <ToDoForm addTodo={addTodo} />
+      <ToDoList todos={todos} checkTodo={checkTodo} deleteTodo={deleteTodo}/>
     </div>
   );
 }
